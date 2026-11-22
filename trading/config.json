@@ -1,24 +1,10 @@
 {
-  "_kommentar": "Risikoregeln aus dem Framework. Platzhalter wurden mit konservativen Standardwerten belegt; hier anpassen.",
+  "_kommentar": "Modus MAXIMALES RISIKO: alle Risikoregeln entfernt. Jeder Trade setzt das gesamte Kapital ein, Hebel unbegrenzt, keine Limits, keine Pflicht-Checks.",
   "startkapital_eur": 1000,
-  "risiko_pro_trade_pct": 1.0,
-  "max_hebel": 3,
-  "hebel_nur_auf": ["Index", "Large-Cap-Aktie", "Hauptwaehrung"],
-  "max_anteil_anlageklasse_pct": 20,
-  "max_anteil_einzelwert_pct": 5,
-  "cash_geldmarkt_ausgenommen": true,
-  "tagesverlust_limit_pct": 3,
-  "monatsverlust_limit_pct": 10,
-  "min_crv": 2.0,
-  "min_unabhaengige_quellen": 2,
-  "mindestliquiditaet": {
-    "aktie_avg_tagesumsatz_usd": 20000000,
-    "etf_avg_tagesumsatz_eur": 1000000,
-    "krypto_avg_tagesumsatz_usd": 50000000
-  },
+  "einsatz_pro_trade_pct": 100,
+  "max_hebel": null,
   "gebuehr_pro_order_eur": 1.0,
   "spread_annahme_pct": 0.3,
   "abgeltungsteuer_pct": 26.375,
-  "benchmark_yahoo": "EUNL.DE",
-  "strategie_stopp_nach_signalen": 50
+  "benchmark_yahoo": "EUNL.DE"
 }

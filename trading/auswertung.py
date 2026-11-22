@@ -27,8 +27,6 @@ for modus in ("papier", "echt"):
         for s in r["quellen"].split(";"): by_src[s.strip()].append(r)
     for k, v in sorted(by_src.items()): show("Quelle " + k, stats(v))
     s = stats(rs)
-    if s["n"] >= cfg["strategie_stopp_nach_signalen"] and s["erwartungswert"] <= 0:
-        print(f"!!! Strategie nach {s['n']} Signalen mit Erwartungswert <= 0 -> GESCHEITERT, stoppen.")
     steuer = max(0, s["summe"]) * cfg["abgeltungsteuer_pct"] / 100
     print(f"Naeherung nach Steuer: {s['summe'] - steuer:+.2f} EUR (Steuer ~{steuer:.2f})")
     start = min(r["einstieg_datum"] for r in rs); end = max(r["ausstieg_datum"] for r in rs)
