@@ -1,0 +1,425 @@
+<title>Die 45-Minuten-Massage</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: ruhige Einspalte, Schritte als Bild+Text-Paare, schwebender Begleit-Timer unten */
+:root{
+  --bg:#f2f4f2; --surface:#ffffff; --ink:#1d2827; --muted:#56635f; --line:#d5ddd9;
+  --accent:#2c6a64; --accent-soft:#dcebe8; --flow:#b8611a; --skin:#eadfd3; --skin-line:#b9a896;
+  --warn:#b3261e; --warn-soft:#f7dcd9; --caution:#c98a12;
+  --display:"Young Serif", Georgia, "Times New Roman", serif;
+  --text:"Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141b1b; --surface:#1c2625; --ink:#e7eeec; --muted:#a3b2ae; --line:#2f3d3b;
+  --accent:#7cc6bc; --accent-soft:#213634; --flow:#f2a65e; --skin:#3a332d; --skin-line:#6b5d50;
+  --warn:#ff8a80; --warn-soft:#3b2221; --caution:#f1c05b; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141b1b; --surface:#1c2625; --ink:#e7eeec; --muted:#a3b2ae; --line:#2f3d3b;
+  --accent:#7cc6bc; --accent-soft:#213634; --flow:#f2a65e; --skin:#3a332d; --skin-line:#6b5d50;
+  --warn:#ff8a80; --warn-soft:#3b2221; --caution:#f1c05b; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--text);font-size:17px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:0 140px}
+.wrap{max-width:860px;margin:0 auto}
+h1,h2,h3{font-family:var(--display);font-weight:400;text-wrap:balance;line-height:1.2;margin:0}
+h1{font-size:clamp(2.1rem,6vw,3.2rem)}
+h2{font-size:clamp(1.5rem,4vw,2rem);margin-bottom:.6rem}
+h3{font-size:1.3rem}
+p{margin:0}
+.prose{max-width:65ch}
+a{color:var(--accent)}
+header{padding-block:3rem 1.5rem;display:grid;gap:1rem}
+.eyebrow{font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:600}
+.lead{font-size:1.15rem;color:var(--muted);max-width:60ch}
+section{padding-block:2.2rem;border-top:1px solid var(--line);display:grid;gap:1rem}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:1rem}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:1.1rem 1.2rem;min-width:0}
+.box h3{font-size:1.1rem;margin-bottom:.4rem}
+ul,ol{margin:0;padding-left:1.25rem;display:grid;gap:.3rem}
+.small{font-size:.92rem;color:var(--muted)}
+.tag{display:inline-block;font-size:.75rem;font-weight:600;padding:.12rem .5rem;border-radius:99px;background:var(--accent-soft);color:var(--accent)}
+.tag.warn{background:var(--warn-soft);color:var(--warn)}
+
+/* Druckskala */
+.scale{display:grid;grid-template-columns:repeat(5,1fr);gap:.4rem}
+.scale div{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:.6rem .4rem;text-align:center;font-size:.85rem;min-width:0}
+.scale b{display:block;font-family:var(--display);font-size:1.5rem;font-weight:400;color:var(--accent)}
+.scale .sweet{border-color:var(--accent);background:var(--accent-soft)}
+
+/* Griffe */
+.tech svg{width:100%;height:auto;max-height:110px;display:block;margin-bottom:.5rem}
+
+/* Schritte */
+.steps{display:grid;gap:1.4rem}
+.step{display:grid;grid-template-columns:minmax(0,220px) minmax(0,1fr);gap:1.4rem;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:1.2rem;scroll-margin-top:20px;transition:border-color .3s, box-shadow .3s}
+.step.is-current{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.step figure{margin:0}
+.step svg{width:100%;height:auto;display:block;max-width:220px;margin:0 auto}
+.step figcaption{font-size:.8rem;color:var(--muted);text-align:center;margin-top:.3rem}
+.step .body{display:grid;gap:.7rem;align-content:start;min-width:0}
+.step .head{display:flex;flex-wrap:wrap;gap:.5rem .8rem;align-items:baseline}
+.num{font-family:var(--display);font-size:1.6rem;color:var(--accent);line-height:1}
+.dur{font-size:.85rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.note{font-size:.92rem;border-left:3px solid var(--flow);padding-left:.7rem;color:var(--ink)}
+.turn{background:var(--accent-soft);border-radius:10px;padding:1rem 1.2rem;display:flex;gap:1rem;align-items:flex-start}
+.turn .body{flex:1}
+.turn .num{font-size:1.3rem}
+@media (max-width:620px){.step{grid-template-columns:1fr}.step svg{max-width:200px}}
+
+/* SVG-Grundformen */
+.sk{fill:var(--skin);stroke:var(--skin-line);stroke-width:1.5}
+.sk-detail{fill:none;stroke:var(--skin-line);stroke-width:1.2}
+.spine{stroke:var(--skin-line);stroke-width:1.5;stroke-dasharray:3 4;fill:none}
+.fl{fill:none;stroke:var(--flow);stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
+.fl.thin{stroke-width:2.2}
+.ahead{fill:var(--flow)}
+.hand{fill:var(--accent);opacity:.35;stroke:var(--accent);stroke-width:1.5}
+.dot{fill:var(--accent)}
+.zone-no{fill:var(--warn);opacity:.35}
+.zone-soft{fill:var(--caution);opacity:.35}
+.line-no{stroke:var(--warn);stroke-width:7;opacity:.45;stroke-linecap:round}
+.lbl{font-family:var(--text);font-size:11px;fill:var(--muted)}
+
+/* Begleit-Timer */
+.coach{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-top:1px solid var(--line);
+  padding:.7rem max(16px,env(safe-area-inset-right,0px)) calc(.7rem + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));box-shadow:0 -6px 24px rgba(0,0,0,.08)}
+.coach .in{max-width:860px;margin:0 auto;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:.6rem 1rem;align-items:center}
+.clock{font-family:var(--display);font-size:2rem;font-variant-numeric:tabular-nums;line-height:1;min-width:4.2ch}
+.now{min-width:0}
+.now b{display:block;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.now span{font-size:.82rem;color:var(--muted);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar{grid-column:1/-1;height:4px;background:var(--line);border-radius:4px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .5s linear}
+.ctrl{display:flex;gap:.35rem;flex-wrap:wrap;justify-content:flex-end}
+button{font:inherit;font-size:.9rem;font-weight:600;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:.45rem .75rem;cursor:pointer}
+button:hover{border-color:var(--accent)}
+button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+button.primary{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+button[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+@media (max-width:620px){.coach .in{grid-template-columns:auto minmax(0,1fr)}.ctrl{grid-column:1/-1;justify-content:stretch}.ctrl button{flex:1}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+table{border-collapse:collapse;width:100%;font-size:.95rem}
+td,th{text-align:left;padding:.5rem .6rem;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:600}
+.tbl{overflow-x:auto}
+.refs li{font-size:.9rem;color:var(--muted)}
+</style>
+
+<!-- Wiederverwendbare Körperformen -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <marker id="ah" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="4.2" markerHeight="4.2" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" class="ahead"/>
+    </marker>
+    <symbol id="back" viewBox="0 0 200 300">
+      <path class="sk" d="M44 82 C30 92 26 120 24 160 C22 200 22 230 24 262 C25 272 36 272 37 262 C39 230 40 200 42 168 C44 140 48 118 52 104 Z"/>
+      <path class="sk" d="M156 82 C170 92 174 120 176 160 C178 200 178 230 176 262 C175 272 164 272 163 262 C161 230 160 200 158 168 C156 140 152 118 148 104 Z"/>
+      <path class="sk" d="M88 52 C88 64 78 70 58 73 C44 75 40 88 42 104 C44 134 52 160 56 188 C58 206 50 230 48 254 C47 272 64 288 100 288 C136 288 153 272 152 254 C150 230 142 206 144 188 C148 160 156 134 158 104 C160 88 156 75 142 73 C122 70 112 64 112 52 Z"/>
+      <ellipse class="sk" cx="100" cy="28" rx="20" ry="24"/>
+      <path class="sk-detail" d="M66 90 C60 104 62 124 72 140 C82 132 88 110 88 92 C80 88 72 88 66 90 Z"/>
+      <path class="sk-detail" d="M134 90 C140 104 138 124 128 140 C118 132 112 110 112 92 C120 88 128 88 134 90 Z"/>
+      <path class="spine" d="M100 58 L100 262"/>
+    </symbol>
+    <symbol id="legs" viewBox="0 0 200 300">
+      <path class="sk" d="M60 8 C52 50 54 90 64 130 C68 150 66 170 66 190 C66 220 72 250 76 270 C77 282 70 290 74 296 L94 296 C96 286 92 278 92 268 C92 240 94 210 92 186 C90 166 92 146 96 126 C100 90 100 40 98 8 Z"/>
+      <path class="sk" d="M140 8 C148 50 146 90 136 130 C132 150 134 170 134 190 C134 220 128 250 124 270 C123 282 130 290 126 296 L106 296 C104 286 108 278 108 268 C108 240 106 210 108 186 C110 166 108 146 104 126 C100 90 100 40 102 8 Z"/>
+      <path class="sk-detail" d="M62 34 C72 46 88 46 97 36"/>
+      <path class="sk-detail" d="M138 34 C128 46 112 46 103 36"/>
+      <path class="sk-detail" d="M70 140 C76 146 86 146 92 140"/>
+      <path class="sk-detail" d="M130 140 C124 146 114 146 108 140"/>
+    </symbol>
+    <symbol id="sole" viewBox="0 0 200 310">
+      <path class="sk" d="M100 300 C72 300 62 272 64 244 C66 214 72 196 70 166 C68 136 60 116 62 86 C64 56 80 40 104 40 C128 40 142 62 140 96 C138 126 128 146 128 176 C128 212 136 240 134 264 C132 290 122 300 100 300 Z"/>
+      <ellipse class="sk" cx="124" cy="26" rx="11" ry="13"/>
+      <ellipse class="sk" cx="101" cy="21" rx="8" ry="10"/>
+      <ellipse class="sk" cx="83" cy="25" rx="7" ry="8"/>
+      <ellipse class="sk" cx="69" cy="33" rx="6" ry="7"/>
+      <ellipse class="sk" cx="59" cy="45" rx="5" ry="6"/>
+    </symbol>
+    <symbol id="head" viewBox="0 0 200 300">
+      <path class="sk" d="M82 160 L82 200 C60 206 34 220 28 300 L172 300 C166 220 140 206 118 200 L118 160 Z"/>
+      <ellipse class="sk" cx="100" cy="110" rx="48" ry="60"/>
+      <path class="sk-detail" d="M78 106 q8 5 16 0 M106 106 q8 5 16 0 M100 114 L97 130 L103 131 M90 146 q10 5 20 0"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="wrap">
+<header>
+  <span class="eyebrow">Partnermassage · Anleitung mit Bildern</span>
+  <h1>Die 45-Minuten-Massage</h1>
+  <p class="lead">Eine ruhige Ganzkörpermassage für deine Freundin: Rücken, Schultern, Beine, Füße, Nacken und Kopf. Sie baut auf klassischer (schwedischer) Massage auf, mit langsamen Streichungen und mittlerem Druck. Diese Kombination ist für Entspannung am besten belegt. Unten läuft ein Timer mit, der dich durch die Schritte führt.</p>
+</header>
+
+<section>
+  <h2>Warum genau diese Methode?</h2>
+  <div class="grid2">
+    <div class="box"><h3>Langsam streichen</h3><p>Haut hat eigene Nervenfasern für angenehme Berührung (C-taktile Fasern). Sie reagieren am stärksten auf sanftes Streichen mit etwa 1–10 cm pro Sekunde und auf hautwarme Hände. Faustregel: Für die ganze Rückenlänge brauchst du 10–15 Sekunden.</p></div>
+    <div class="box"><h3>Mittlerer Druck</h3><p>Mäßig fester Druck wirkt entspannender als nur leichtes Streicheln. In Studien sank die Herzfrequenz und das Nervensystem schaltete messbar Richtung Ruhe. Sehr harter Druck bringt Laien dagegen eher blaue Flecken als Entspannung.</p></div>
+    <div class="box"><h3>Was Massage nachweislich kann</h3><p>Schon eine Massage senkt akute Anspannung, Puls und Blutdruck. Regelmäßige Massagen verringern Angst- und Depressionswerte. Dazu kommt Nähe: ruhige Berührung und gemeinsames Atmen beruhigen beide.</p></div>
+    <div class="box"><h3>Was nicht stimmt</h3><ul>
+      <li>„Massage spült Giftstoffe aus“: unbelegt.</li>
+      <li>„Massage senkt Cortisol stark“: der Effekt ist klein und unsicher.</li>
+      <li>„Fußreflexzonen behandeln Organe“: unbelegt. Fußmassage tut trotzdem gut.</li>
+    </ul></div>
+  </div>
+</section>
+
+<section>
+  <h2>Vorbereitung (10 Minuten vorher)</h2>
+  <div class="grid2">
+    <div class="box"><h3>Raum</h3><ul>
+      <li>Warm: 23–25 °C. Wer liegt, kühlt schnell aus.</li>
+      <li>Gedämpftes Licht, ruhige Musik ohne Gesang, Handys stumm.</li>
+      <li>Am besten eine dicke Decke oder Matte auf dem Boden. Ein Bett ist für deinen Rücken zu weich und zu niedrig.</li>
+      <li>Großes Handtuch zum Abdecken, Kissen unter die Fußgelenke in Bauchlage, eine Decke für danach.</li>
+    </ul></div>
+    <div class="box"><h3>Öl</h3><ul>
+      <li>Neutral und gut verträglich: Jojoba- oder Sonnenblumenöl.</li>
+      <li>Mandelöl nur, wenn sie keine Nussallergie hat.</li>
+      <li>Duftöl höchstens 1–2 Tropfen auf 10 ml und vorher am Unterarm testen.</li>
+      <li>Öl <b>nie direkt auf die Haut</b> geben. Erst in deinen Händen anwärmen.</li>
+      <li>Nur so viel, dass die Hände gleiten, ohne zu rutschen.</li>
+    </ul></div>
+    <div class="box"><h3>Du selbst</h3><ul>
+      <li>Hände waschen und warm reiben, Nägel kurz, Ringe und Uhr ab.</li>
+      <li>Druck kommt aus deinem <b>Körpergewicht</b>, nicht aus Fingerkraft: nach vorn lehnen, Handgelenke möglichst gerade.</li>
+      <li>Ruhig atmen. Deine Atmung überträgt sich.</li>
+      <li>Goldene Regel: <b>Eine Hand bleibt immer auf dem Körper</b>, auch wenn du die Position wechselst.</li>
+    </ul></div>
+    <div class="box"><h3>Kurz absprechen</h3><ul>
+      <li>„Gibt es Stellen, die wehtun oder die ich auslassen soll?“</li>
+      <li>„Sag jederzeit fester, sanfter oder stopp.“</li>
+      <li>Abmachen, ob ihr redet oder lieber schweigt.</li>
+    </ul></div>
+  </div>
+  <h3>Die Druckskala</h3>
+  <p class="small">Frag nach 2–3 Minuten einmal: „Auf einer Skala von 1 bis 5?“ Danach nur noch, wenn du die Region wechselst.</p>
+  <div class="scale" role="list">
+    <div role="listitem"><b>1</b>Hauch</div>
+    <div role="listitem"><b>2</b>sanft</div>
+    <div role="listitem" class="sweet"><b>3</b>angenehm fest</div>
+    <div role="listitem" class="sweet"><b>4</b>fest, „guter Schmerz“</div>
+    <div role="listitem"><b>5</b>zu viel</div>
+  </div>
+  <p class="small">Ziel ist meistens 3, an Schultern und Waden auch 4. Wenn sie die Luft anhält, das Gesicht verzieht oder sich anspannt, nimm den Druck sofort raus.</p>
+</section>
+
+<section>
+  <h2>Die drei Grundgriffe</h2>
+  <div class="grid2">
+    <div class="box tech">
+      <svg viewBox="0 0 220 90" aria-hidden="true"><rect x="10" y="40" width="200" height="34" rx="8" class="sk"/><path class="hand" d="M40 30 h50 a16 16 0 0 1 0 32 h-50 z"/><path class="fl" d="M30 22 L190 22" marker-end="url(#ah)"/></svg>
+      <h3>Ausstreichen (Effleurage)</h3>
+      <p>Ganze Handfläche flach und weich, Finger locker zusammen. Lange, langsame Züge mit gleichmäßigem Druck. Damit beginnst und beendest du jede Körperregion und verbindest die Griffe.</p>
+    </div>
+    <div class="box tech">
+      <svg viewBox="0 0 220 90" aria-hidden="true"><rect x="10" y="40" width="200" height="34" rx="8" class="sk"/><path class="fl" d="M70 60 C60 30 100 25 100 50" marker-end="url(#ah)"/><path class="fl" d="M150 60 C160 30 120 25 120 50" marker-end="url(#ah)"/></svg>
+      <h3>Kneten (Petrissage)</h3>
+      <p>Muskel zwischen Handballen und Fingern sanft fassen, anheben und zur anderen Hand schieben, wie Brotteig. Beide Hände arbeiten im Wechsel. Gut für Schultern, Flanken und Waden. Nie in die Haut kneifen.</p>
+    </div>
+    <div class="box tech">
+      <svg viewBox="0 0 220 90" aria-hidden="true"><rect x="10" y="40" width="200" height="34" rx="8" class="sk"/><circle cx="60" cy="57" r="9" class="fl thin"/><circle cx="110" cy="57" r="9" class="fl thin"/><circle cx="160" cy="57" r="9" class="fl thin"/><path class="fl" d="M40 25 L185 25" marker-end="url(#ah)"/></svg>
+      <h3>Daumenkreise</h3>
+      <p>Daumenballen setzt auf, kleine Kreise von 2–3 cm. Du verschiebst dabei die Haut gegen den Muskel, statt über die Haut zu rutschen. Nach 3–4 Kreisen rückst du eine Daumenbreite weiter.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Der Ablauf</h2>
+  <p class="small prose">Zeiten: 45-Minuten-Version / 30-Minuten-Version. Sie beginnt in Bauchlage (Kissen unter den Fußgelenken, Kopf seitlich oder im Ring eines gefalteten Handtuchs) und dreht sich nach Schritt 6 auf den Rücken.</p>
+
+  <div class="steps" id="steps"></div>
+</section>
+
+<section>
+  <h2>Hier nicht drücken</h2>
+  <div class="grid2">
+    <div class="box" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem">
+      <figure style="margin:0"><svg viewBox="0 0 200 300" role="img" aria-label="Rücken mit Gefahrenzonen"><use href="#back"/><path class="line-no" d="M100 56 L100 262"/><ellipse class="zone-soft" cx="70" cy="196" rx="13" ry="18"/><ellipse class="zone-soft" cx="130" cy="196" rx="13" ry="18"/><ellipse class="zone-no" cx="100" cy="58" rx="9" ry="6"/></svg></figure>
+      <figure style="margin:0"><svg viewBox="0 0 200 300" role="img" aria-label="Beine mit Gefahrenzonen"><use href="#legs"/><ellipse class="zone-no" cx="81" cy="142" rx="11" ry="9"/><ellipse class="zone-no" cx="119" cy="142" rx="11" ry="9"/></svg></figure>
+      <p class="small" style="grid-column:1/-1"><span class="tag warn">rot</span> kein Druck · <span class="tag" style="background:var(--warn-soft);color:var(--caution)">gelb</span> nur sanft streichen</p>
+    </div>
+    <div class="box"><ul>
+      <li><b>Wirbelsäule:</b> nie direkt auf die Knochen drücken. Immer daneben in der Muskelrinne arbeiten.</li>
+      <li><b>Nierengegend</b> (unterhalb der Rippen, seitlich): nur flach streichen.</li>
+      <li><b>Kniekehle</b>: Nerven und Gefäße liegen dort oberflächlich. Nur darüber gleiten.</li>
+      <li><b>Vorderer Hals</b>, Achsel, Leiste: nie drücken.</li>
+      <li><b>Krampfadern</b>, blaue Flecken, Wunden, Ausschlag: aussparen.</li>
+    </ul></div>
+  </div>
+  <div class="box" style="border-color:var(--warn)">
+    <h3 style="color:var(--warn)">Gar nicht massieren bei</h3>
+    <p>Fieber oder Infekt, frischen Verletzungen oder Operationen, akuten Entzündungen, Hautausschlag. <b>Geschwollene, warme, schmerzende Wade:</b> Das kann eine Thrombose sein. Nicht massieren, sondern ärztlich abklären lassen. In der Schwangerschaft nur in Seitenlage, den Bauch aussparen und vorher bei Hebamme oder Arzt nachfragen. Bei Blutverdünnern und Osteoporose nur sanften Druck verwenden.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Kleine Dinge, die den Unterschied machen</h2>
+  <div class="grid2">
+    <div class="box"><ul>
+      <li><b>Rhythmus</b> ist wichtiger als Technik. Gleichmäßig und vorhersehbar beruhigt, Hektik weckt auf.</li>
+      <li><b>Wiederholen</b> ist erwünscht. Lieber einen Griff 5-mal ruhig als 10 verschiedene Griffe.</li>
+      <li><b>Übergänge weich:</b> zwischen zwei Griffen immer kurz ausstreichen.</li>
+    </ul></div>
+    <div class="box"><ul>
+      <li><b>Abdecken:</b> Nur die Region frei machen, an der du arbeitest.</li>
+      <li><b>Ihre Atmung beobachten:</b> Wird sie lang und tief, bist du richtig.</li>
+      <li><b>Hinterher:</b> Ein Glas Wasser, langsam aufstehen. Manche sind nach einer Massage kurz schwindelig.</li>
+    </ul></div>
+  </div>
+</section>
+
+<section>
+  <h2>Quellen</h2>
+  <ul class="refs">
+    <li>Löken, L. S. et al. (2009). Coding of pleasant touch by unmyelinated afferents in humans. <i>Nature Neuroscience</i>, 12(5).</li>
+    <li>Ackerley, R. et al. (2014). Human C-tactile afferents are tuned to the temperature of a skin-stroking caress. <i>Journal of Neuroscience</i>, 34(8).</li>
+    <li>Diego, M. A. &amp; Field, T. (2009). Moderate pressure massage elicits a parasympathetic nervous system response. <i>International Journal of Neuroscience</i>, 119(5).</li>
+    <li>Moyer, C. A., Rounds, J. &amp; Hannum, J. W. (2004). A meta-analysis of massage therapy research. <i>Psychological Bulletin</i>, 130(1).</li>
+    <li>Moyer, C. A. et al. (2011). Does massage therapy reduce cortisol? A comprehensive quantitative review. <i>Journal of Bodywork and Movement Therapies</i>, 15(1).</li>
+  </ul>
+  <p class="small">Diese Seite ersetzt keine Physiotherapie oder medizinische Behandlung.</p>
+</section>
+</div>
+
+<!-- Begleit-Timer -->
+<div class="coach" role="region" aria-label="Begleit-Timer">
+  <div class="in">
+    <div class="clock" id="clock">45:00</div>
+    <div class="now"><b id="nowTitle">Bereit? Wähle die Länge und drücke Start.</b><span id="nowNext">Der Timer führt dich Schritt für Schritt.</span></div>
+    <div class="ctrl">
+      <button id="len45" aria-pressed="true">45 Min</button>
+      <button id="len30" aria-pressed="false">30 Min</button>
+      <button id="prev" aria-label="Vorheriger Schritt">◀</button>
+      <button id="play" class="primary">Start</button>
+      <button id="next" aria-label="Nächster Schritt">▶</button>
+      <button id="sound" aria-pressed="true" aria-label="Signalton beim Schrittwechsel">Ton</button>
+    </div>
+    <div class="bar"><i id="bar"></i></div>
+  </div>
+</div>
+
+<script>
+const STEPS = [
+ {t:"Ankommen", d:[2,1], fig:`<use href="#back"/><ellipse class="hand" cx="100" cy="108" rx="18" ry="24"/><ellipse class="hand" cx="100" cy="246" rx="18" ry="22"/>`,
+  cap:"Hände ruhen: zwischen den Schulterblättern und auf dem Kreuzbein",
+  how:["Handtuch über den Rücken. Lege eine Hand flach zwischen die Schulterblätter, die andere auf das Kreuzbein (unterer Rücken, über dem Po).","Nicht bewegen. Spüre die Wärme und ihren Atem.","Atme ein paar Mal hörbar langsam aus. Oft passt sich ihr Atem an.","Dann das Handtuch bis zur Hüfte zurückschlagen."],
+  note:"Das ist die Ankommen-Übung aus dem somatischen Teil: ruhige Hände und gemeinsames Atmen geben Sicherheit."},
+ {t:"Rücken ausstreichen", d:[5,5], fig:`<use href="#back"/><path class="fl" d="M94 248 L92 112 C90 86 72 78 56 86 C46 102 48 140 54 180 C58 210 56 234 72 250" marker-end="url(#ah)"/><path class="fl" d="M106 248 L108 112 C110 86 128 78 144 86 C154 102 152 140 146 180 C142 210 144 234 128 250" marker-end="url(#ah)"/>`,
+  cap:"Neben der Wirbelsäule hoch, über die Schultern, an den Seiten zurück",
+  how:["Warmes Öl in den Händen verteilen. Hände flach links und rechts der Wirbelsäule auf den unteren Rücken legen, Finger zeigen zum Kopf.","Mit deinem Körpergewicht langsam hochgleiten bis zwischen die Schulterblätter.","Über die Schultern fächern, die Hände umschließen kurz die Schulterrundung.","Mit leichtem Druck an den Seiten (Flanken) zurück nach unten ziehen.","8–12 Mal. Hoch mit Druck, zurück leicht. Für einen Zug 10–15 Sekunden."],
+  note:"Das ist der wichtigste Griff. Wenn du unsicher bist, mach einfach diesen länger."},
+ {t:"Flanken kneten", d:[5,3], fig:`<use href="#back"/><path class="fl" d="M60 232 q-10 -8 0 -16 q10 -8 0 -16 q-10 -8 0 -16 q10 -8 0 -16 q-10 -8 0 -16 q10 -8 0 -16" marker-end="url(#ah)"/><path class="fl" d="M140 232 q10 -8 0 -16 q-10 -8 0 -16 q10 -8 0 -16 q-10 -8 0 -16 q10 -8 0 -16 q-10 -8 0 -16" marker-end="url(#ah)"/>`,
+  cap:"Seitliche Rückenmuskeln im Wechselgriff hochwandern",
+  how:["Setz oder knie dich seitlich neben sie und arbeite auf der dir <b>gegenüberliegenden</b> Seite.","Beide Hände flach auf die Flanke: die eine zieht zu dir, die andere schiebt weg, im Wechsel wie beim Teigkneten.","Von der Hüfte langsam hoch bis unter die Achsel, dann wieder runter. 3 Bahnen.","Seite wechseln und mit 2–3 Ausstreichungen verbinden."],
+  note:"Im Taillenbereich (Nieren) nur flächig und weich. Fester darf es in Richtung Schulterblatt werden."},
+ {t:"Daumenkreise neben der Wirbelsäule", d:[4,3], fig:`<use href="#back"/>${[240,214,188,162,136,110].map(y=>`<circle class="fl thin" cx="89" cy="${y}" r="6"/><circle class="fl thin" cx="111" cy="${y}" r="6"/>`).join("")}<path class="fl thin" d="M76 252 L76 104" marker-end="url(#ah)"/><path class="fl thin" d="M124 252 L124 104" marker-end="url(#ah)"/>`,
+  cap:"Kleine Kreise in der Muskelrinne, zwei Fingerbreit neben der Wirbelsäule",
+  how:["Beide Daumen zwei Fingerbreit links und rechts der Wirbelsäule auf den unteren Rücken setzen, die Hände liegen locker auf.","Kleine Kreise nach außen, 3–4 pro Stelle, dann eine Daumenbreite höher.","So bis zwischen die Schulterblätter wandern.","Mit flachen Händen nach unten ausstreichen. 2–3 Durchgänge."],
+  note:"Nie auf die Knochen der Wirbelsäule drücken. Du spürst die Rinne neben den Wirbeln, dort arbeitest du."},
+ {t:"Schultern und Schulterblätter", d:[6,5], fig:`<use href="#back"/><path class="fl" d="M90 92 C92 114 86 136 72 148 C58 130 54 104 64 86" marker-end="url(#ah)"/><path class="fl" d="M110 92 C108 114 114 136 128 148 C142 130 146 104 136 86" marker-end="url(#ah)"/><circle class="fl thin" cx="80" cy="66" r="6"/><circle class="fl thin" cx="66" cy="72" r="6"/><circle class="fl thin" cx="120" cy="66" r="6"/><circle class="fl thin" cx="134" cy="72" r="6"/>`,
+  cap:"Am Innenrand der Schulterblätter entlang, Nackenschultermuskel kneten",
+  how:["<b>Schulterkappe kneten:</b> Den Muskel zwischen Hals und Schulter mit beiden Händen fassen, sanft anheben und loslassen. Langsam vom Hals nach außen.","<b>Schulterblattrand:</b> Mit den Fingerkuppen oder dem Daumenballen am Innenrand des Schulterblatts entlang ziehen: innen nach unten, unten herum und außen wieder hoch, wie im Bild.","Findest du einen festen Knoten: 20–30 Sekunden gleichmäßig halten (Stufe 3–4) und fragen, wie es sich anfühlt. Dann wieder lösen.","Mit großen Ausstreichungen über den ganzen Rücken abschließen, dann Rücken zudecken."],
+  note:"Hier sitzt bei den meisten die Anspannung. Plane hier lieber eine Minute mehr ein."},
+ {t:"Beine, Rückseite", d:[8,0], fig:`<use href="#legs"/><path class="fl" d="M80 280 C80 230 78 190 78 160 C78 120 74 80 70 28" marker-end="url(#ah)"/><path class="fl" d="M120 280 C120 230 122 190 122 160 C122 120 126 80 130 28" marker-end="url(#ah)"/><path class="fl thin" d="M70 242 q-8 -6 0 -12 q8 -6 0 -12 q-8 -6 0 -12 q8 -6 0 -12" /><text class="lbl" x="140" y="146">Kniekehle:</text><text class="lbl" x="140" y="159">nur gleiten</text>`,
+  cap:"Lange Züge von der Ferse Richtung Po, Wade kneten",
+  how:["Ein Bein freilegen, das andere bleibt zugedeckt.","Ausstreichen: beide Hände um den Knöchel, mit Druck hoch bis zum Po (Richtung Herz), seitlich leicht zurück. 6 Mal.","Wade kneten: mit beiden Händen im Wechsel, von unten nach oben.","Oberschenkel: großflächig mit den Handballen kneten.","Über die Kniekehle nur ohne Druck gleiten. Zum Schluss 3 lange Züge. Dann das andere Bein."],
+  note:"Druck immer Richtung Herz. Bei geschwollener, warmer, schmerzender Wade nicht massieren."},
+ {t:"Umdrehen", d:[1,1], turn:true,
+  how:["Halte das Handtuch hoch wie einen Sichtschutz, während sie sich auf den Rücken dreht.","Kissen unter die Knie (entlastet den unteren Rücken), Decke bis zum Hals."]},
+ {t:"Füße", d:[4,4], fig:`<use href="#sole"/><path class="fl" d="M88 282 L82 100" marker-end="url(#ah)"/><path class="fl" d="M112 282 L120 100" marker-end="url(#ah)"/><circle class="fl thin" cx="88" cy="84" r="7"/><circle class="fl thin" cx="112" cy="78" r="7"/><circle class="fl thin" cx="100" cy="250" r="9"/>`,
+  cap:"Daumen streichen von der Ferse zu den Zehen, Kreise am Fußballen",
+  how:["Einen Fuß zwischen beide Hände nehmen und eine Weile nur halten. Warme Hände!","Mit beiden Daumen abwechselnd von der Ferse zu den Zehen streichen, fest genug, damit es nicht kitzelt.","Daumenkreise an Ferse und Fußballen.","Jeden Zeh einzeln sanft drehen und lang ziehen.","Fuß mit beiden Händen umschließen und zum Abschluss langsam nach unten ausstreichen. Dann der andere Fuß."],
+  note:"Kitzelt es, mehr Druck und langsamer, nicht weniger. Kein Öl? Dann geht es auch mit Socken."},
+ {t:"Nacken in Rückenlage", d:[4,4], fig:`<use href="#head"/>${[[74,170],[86,176],[100,178],[114,176],[126,170]].map(([x,y])=>`<circle class="dot" cx="${x}" cy="${y}" r="4"/>`).join("")}<path class="fl" d="M34 200 L34 120" marker-end="url(#ah)"/><path class="fl" d="M166 200 L166 120" marker-end="url(#ah)"/><text class="lbl" x="62" y="214">Finger unter dem Schädelrand</text>`,
+  cap:"Du sitzt am Kopfende. Der Kopf liegt in deinen Händen",
+  how:["Setz dich ans Kopfende. Schieb beide Hände flach unter ihre Schultern und zieh sie langsam zum Nacken hoch. 3 Mal.","Fingerkuppen unter den Schädelrand (wo Nacken und Kopf sich treffen), Kopfgewicht ruht in deinen Händen.","Einfach halten, 30–60 Sekunden. Oft lässt der Nacken jetzt richtig los.","Dann ganz sanft Richtung dir ziehen (Zug wie im Bild), wenige Millimeter, 10 Sekunden halten, lösen.","Kopf leicht zur Seite drehen und die Nackenseite mit flacher Hand von Ohr zur Schulter ausstreichen. Seite wechseln."],
+  note:"Nur seitlich und hinten am Nacken arbeiten, nie vorne am Hals. Den Kopf nicht ruckartig drehen."},
+ {t:"Kopf und Gesicht", d:[4,3], fig:`<use href="#head"/><path class="fl thin" d="M96 76 C88 70 76 72 66 82" marker-end="url(#ah)"/><path class="fl thin" d="M104 76 C112 70 124 72 134 82" marker-end="url(#ah)"/><circle class="fl thin" cx="58" cy="106" r="7"/><circle class="fl thin" cx="142" cy="106" r="7"/><circle class="fl thin" cx="76" cy="62" r="6"/><circle class="fl thin" cx="100" cy="54" r="6"/><circle class="fl thin" cx="124" cy="62" r="6"/>`,
+  cap:"Kopfhaut kreisen, Stirn zur Seite ausstreichen, Schläfen kreisen",
+  how:["<b>Kopfhaut:</b> Alle Fingerkuppen auf den Kopf setzen und die Kopfhaut in kleinen Kreisen verschieben, wie beim langsamen Haarewaschen. Über den ganzen Kopf.","<b>Stirn:</b> Daumen in der Stirnmitte, langsam zu den Schläfen ausstreichen. Eine Reihe höher wiederholen.","<b>Schläfen:</b> Mit zwei Fingern sehr langsam kreisen, Stufe 2.","Ohrläppchen zwischen Daumen und Zeigefinger sanft ausstreichen.","Ohne Öl im Gesicht arbeiten, Rest an der Kleidung abwischen."],
+  note:"Hier gilt: weniger Druck, noch langsamer. Vorher fragen, ob Haare und Make-up okay sind."},
+ {t:"Ausklang", d:[2,1], fig:`<use href="#head"/><ellipse class="hand" cx="100" cy="100" rx="40" ry="20"/>`,
+  cap:"Hände ruhen, dann ganz langsam lösen",
+  how:["Beide Hände ruhig auf ihre Schultern oder um den Kopf legen. Eine Minute nichts tun.","Druck ganz allmählich verringern, bis du die Hände kaum noch spürst, dann erst lösen.","Decke gut zudecken und leise sagen: „Bleib liegen, so lange du magst.“","Ein Glas Wasser bereitstellen."],
+  note:"Das Ende ist so wichtig wie der Anfang. Nicht abrupt aufhören, nicht gleich reden."}
+];
+
+const stepsEl=document.getElementById('steps');
+STEPS.forEach((s,i)=>{
+  const n=i+1;
+  const dur=`${s.d[0]} Min / ${s.d[1]?s.d[1]+" Min":"entfällt"}`;
+  if(s.turn){
+    stepsEl.insertAdjacentHTML('beforeend',`<div class="turn step" id="s${i}" style="display:flex"><span class="num">${n}</span><div class="body"><div class="head"><h3>${s.t}</h3><span class="dur">${dur}</span></div><p>${s.how.join(" ")}</p></div></div>`);
+    return;
+  }
+  stepsEl.insertAdjacentHTML('beforeend',`
+  <article class="step" id="s${i}">
+    <figure><svg viewBox="0 0 200 ${s.fig.includes('#sole')?310:300}" role="img" aria-label="${s.cap}">${s.fig}</svg><figcaption>${s.cap}</figcaption></figure>
+    <div class="body">
+      <div class="head"><span class="num">${n}</span><h3>${s.t}</h3><span class="dur">${dur}</span></div>
+      <ol>${s.how.map(h=>`<li>${h}</li>`).join("")}</ol>
+      <p class="note">${s.note}</p>
+    </div>
+  </article>`);
+});
+
+/* Timer */
+let plan=0, idx=0, left=0, running=false, tick=null, sound=true, audioCtx=null, wake=null;
+const $=id=>document.getElementById(id);
+const active=()=>STEPS.map((s,i)=>({...s,i})).filter(s=>s.d[plan]>0);
+const fmt=s=>`${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
+function total(){return active().reduce((a,s)=>a+s.d[plan]*60,0)}
+function render(){
+  const a=active(); const s=a[idx];
+  document.querySelectorAll('.step').forEach(e=>e.classList.remove('is-current'));
+  if(!running && left===0 && idx===0){$('clock').textContent=fmt(total());$('bar').style.width='0';return;}
+  if(!s){$('clock').textContent='00:00';$('nowTitle').textContent='Fertig. Lass sie nachruhen.';$('nowNext').textContent='';$('bar').style.width='100%';$('play').textContent='Neu';return;}
+  $('clock').textContent=fmt(left);
+  $('nowTitle').textContent=`${s.i+1}. ${s.t}`;
+  $('nowNext').textContent=a[idx+1]?`Danach: ${a[idx+1].t}`:'Danach: fertig';
+  const done=a.slice(0,idx).reduce((x,y)=>x+y.d[plan]*60,0)+(s.d[plan]*60-left);
+  $('bar').style.width=(done/total()*100)+'%';
+  document.getElementById('s'+s.i)?.classList.add('is-current');
+}
+function chime(){
+  if(!sound) return;
+  try{audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();
+    const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type='sine';o.frequency.value=528;
+    g.gain.setValueAtTime(0.0001,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(0.15,audioCtx.currentTime+0.05);g.gain.exponentialRampToValueAtTime(0.0001,audioCtx.currentTime+1.4);
+    o.connect(g).connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+1.5);}catch(e){}
+}
+function go(i,scroll=true){
+  const a=active(); idx=Math.max(0,Math.min(i,a.length)); left=a[idx]?a[idx].d[plan]*60:0; render();
+  if(scroll&&a[idx]) document.getElementById('s'+a[idx].i)?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
+}
+async function keepAwake(on){try{if(on&&'wakeLock' in navigator){wake=await navigator.wakeLock.request('screen');}else if(wake){await wake.release();wake=null;}}catch(e){}}
+function play(){
+  const a=active();
+  if(idx>=a.length){go(0);}
+  if(!running && left===0) go(idx);
+  running=!running; $('play').textContent=running?'Pause':'Weiter';
+  keepAwake(running);
+  clearInterval(tick);
+  if(running){
+    try{audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();}catch(e){}
+    tick=setInterval(()=>{left--; if(left<=0){chime();go(idx+1); if(idx>=active().length){running=false;clearInterval(tick);keepAwake(false);render();}} else render();},1000);
+  }
+  render();
+}
+$('play').onclick=play;
+$('next').onclick=()=>{if(!running&&left===0)go(0);else go(idx+1);};
+$('prev').onclick=()=>go(idx-1);
+function setPlan(p){plan=p;$('len45').setAttribute('aria-pressed',p===0);$('len30').setAttribute('aria-pressed',p===1);running=false;clearInterval(tick);idx=0;left=0;$('play').textContent='Start';$('nowTitle').textContent=`Bereit für ${p?30:45} Minuten. Drücke Start.`;$('nowNext').textContent='Der Timer führt dich Schritt für Schritt.';render();}
+$('len45').onclick=()=>setPlan(0);$('len30').onclick=()=>setPlan(1);
+$('sound').onclick=()=>{sound=!sound;$('sound').setAttribute('aria-pressed',sound);};
+document.addEventListener('visibilitychange',()=>{if(running&&document.visibilityState==='visible')keepAwake(true);});
+render();
+</script>
